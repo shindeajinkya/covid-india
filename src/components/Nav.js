@@ -34,7 +34,7 @@ function Nav() {
                         activeStyle={activeStyle}
                         className='nav-link'
                     >
-                    Top News
+                    News
                     </NavLink>
                 </li>
             </ul>
