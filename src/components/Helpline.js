@@ -32,7 +32,7 @@ class Helpline extends React.Component {
     }
 
     render() {
-        const { numberDetails, data, error, search } = this.state
+        const { numberDetails, data, search } = this.state
 
         const filteredStates = numberDetails.filter((stateDetails) => {
             return stateDetails.state_or_UT.toLowerCase().includes(search.toLowerCase())
