@@ -18,6 +18,12 @@ li {
   padding: 50px;
 }
 
+.dark {
+  color: #dadada;
+  background: #1c2022;
+  min-height: 100%;
+}
+
 .grid {
   display: flex;
   flex-wrap: wrap;
@@ -33,7 +39,16 @@ li {
 }
 
 .space-between {
-  justify-content: space-around;
+  justify-content: space-between;
+}
+
+.btn-clear {
+  border: none;
+  background: transparent;
+}
+
+.btn-clear:focus {
+  outline: none;
 }
 
 .nav-link {
@@ -62,11 +77,15 @@ li {
 
 .countrywide {
   text-align: center;
+  margin-bottom: 25px;
 }
 
 .countrywide a{
-  text-decoration: none;
-  color: #000000;
+  font-weight: bold;
+}
+
+.co-dark {
+  color: #ffffff;
 }
 
 .search {
@@ -75,7 +94,7 @@ li {
   justify-content: center;
 }
 
-.search-box {
+.search-box-light {
   width: 300px;
   font-size: 30px;
   border-top: none;
@@ -84,14 +103,28 @@ li {
   text-align: center;
 }
 
-.search-box:focus {
+.search-box-dark {
+  width: 300px;
+  font-size: 30px;
+  background: #1c2022;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  text-align: center;
+  color: #ffffff;
+}
+
+.search-box-light:focus {
+  outline: none;
+}
+
+.search-box-dark:focus {
   outline: none;
 }
 
 .number-card {
   padding-bottom: 30px;
-  padding-left: 20px;
-  padding-right: 20px;
+  margin-top: 25px;
 }
 
 .number-head {
@@ -99,14 +132,26 @@ li {
   /* padding: 0; */
 }
 
-.call-button {
+.call-light {
   text-decoration: none;
   color: #000000;
   padding: 5px 10px;
   border: 1px solid #000000;
 }
 
-.call-button:hover {
+.call-light:hover {
+  background-color: #6a6a6a;
+  color: white;
+}
+
+.call-dark {
+  text-decoration: none;
+  color: #ffffff;
+  padding: 5px 10px;
+  border: 1px solid #ffffff;
+}
+
+.call-dark:hover {
   background-color: #6a6a6a;
   color: white;
 }
@@ -132,4 +177,29 @@ li {
 .news-card img {
   max-width: 100%;
   height: 200px;
+}
+
+@media(max-width: 768px) {
+  .search-box-light {
+    width: 180px;
+    font-size: 20px;
+    margin-top: 15px;
+  }
+
+  .search-box-dark {
+    width: 180px;
+    font-size: 20px;
+    margin-top: 15px;
+  }
+
+  .nav-link {
+    font-size: 16px;
+  }
+}
+
+@media(max-width: 425px) {
+  .card {
+    width: 100%;
+    margin: 15px auto;
+  }
 }
