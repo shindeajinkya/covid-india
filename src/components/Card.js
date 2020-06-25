@@ -2,7 +2,7 @@ import React from 'react';
 
 function Card({ state, confirmed, active, deaths, recovered }){
     return (
-        <li className="card" key={state}>
+        <li className="card">
             <h3>{state}</h3>
             <p>Total: {confirmed}</p>
             <p>Active: {active}</p>

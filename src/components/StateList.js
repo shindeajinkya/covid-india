@@ -8,12 +8,23 @@ class StateList extends React.Component{
         sortedStates: null,
     }
 
+    uniqByKeepLast = (data, key) => {
+        return [
+            ...new Map(
+                data.map(x => [key(x), x])
+            ).values()
+        ]
+    }
+
     componentDidMount() {
         getStateData()
         .then(res => res.json())
         .then(res => {
-            this.setState({ sortedStates: res.state_data.sort((a, b) => { return b.confirmed - a.confirmed }) })
-            console.log(this.state.sortedStates)
+            const resolvedArray = this.uniqByKeepLast(res.state_data, it => it.state)            
+            this.setState({ 
+                sortedStates: resolvedArray
+                    .sort((a, b) => { return b.confirmed - a.confirmed })
+            })
         })
     }
 
@@ -25,7 +36,8 @@ class StateList extends React.Component{
                     {
                         sortedStates.map((stateIndia) => {
                             return (
-                                <Card 
+                                <Card
+                                    key={stateIndia.state} 
                                     {...stateIndia}
                                 />
                             )

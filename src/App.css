@@ -202,4 +202,14 @@ li {
     width: 100%;
     margin: 15px auto;
   }
+
+  .news-card {
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  .news-card img {
+    max-width: 100%;
+    height: auto;
+  }
 }
