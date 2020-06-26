@@ -15,40 +15,33 @@ const Helpline = React.lazy(() => import('./components/Helpline'))
 
 const Headlines = React.lazy(() => import('./components/Headlines'))
 
-class App extends React.Component {
-  state = {
-    theme: 'light',
-    toggleTheme: () => {
-      this.setState(({theme}) => ({
-        theme: theme === 'light' ? 'dark' : 'light'
-      }))
-    }
-  }
+function App() {
+  const [theme, setTheme] = React.useState('light')
 
-  render(){
-    return (
-      <Router>
-        <ThemeProvider 
-        value={this.state}
-        >
-          <div className={this.state.theme}>
-            <div className="container">
-              <Nav />
+  const toggleTheme = () => setTheme(theme => theme === 'light' ? 'dark' : 'light')
 
-              <React.Suspense fallback={<Loading/>}>
-                <Switch>
-                  <Route exact path='/' component={StateList} />
-                  <Route exact path='/helpline' component={Helpline} />
-                  <Route path='/headlines' component={Headlines} />
-                  <Route render={() => <h1>404</h1>} />
-                </Switch>
-              </React.Suspense>
-            </div>
+  return (
+    <Router>
+      <ThemeProvider 
+      value={theme}
+      >
+        <div className={theme}>
+          <div className="container">
+            <Nav toggleTheme={toggleTheme} />
+
+            <React.Suspense fallback={<Loading/>}>
+              <Switch>
+                <Route exact path='/' component={StateList} />
+                <Route exact path='/helpline' component={Helpline} />
+                <Route path='/headlines' component={Headlines} />
+                <Route render={() => <h1>404</h1>} />
+              </Switch>
+            </React.Suspense>
           </div>
-        </ThemeProvider>
-      </Router>
-    );
-  }
+        </div>
+      </ThemeProvider>
+    </Router>
+  )
 }
 
 export default App;

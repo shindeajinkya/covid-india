@@ -2,61 +2,83 @@ import React from 'react';
 import { getHeadlines } from '../utils/api';
 import Loading from './Loading';
 
-class Headlines extends React.Component {
-    state = {
-        newsArray: [],
-        loading: true,
-    }
+function headlineReducer(state, action) {
+    if(action.type === 'success') {
+        const { headlines, headlines_summary, image_link } = action.res
 
-    componentDidMount() {
-        getHeadlines()
-        .then(res => res.json())
-        .then(({ headlines, headlines_summary, image_link, source }) => {
-            const newsArray = []
+        const newsArray = []
 
-            headlines.forEach((head, index) => {
-                newsArray[index] = {headline: head}
-            });
-
-            headlines_summary.forEach((summary, index) => {
-                newsArray[index].summary = summary
-            })
-
-            image_link.forEach((image, index) => {
-                newsArray[index].image = image
-            })
-            
-            this.setState({ newsArray, loading: false })
+        headlines.forEach((head, index) => {
+            newsArray[index] = {headline: head}
         })
-        .catch(err => console.log(err))
-    }
 
-    render() {
-        const { newsArray, loading } = this.state
-        if(!loading){
-            return (
-                <div>
-                    <ul className="news-list">
-                        {
-                            newsArray.map(({headline, summary, image}) => {
-                                return (
-                                    <li className="news-card">
-                                        <img src={`${image}`} alt="News" />
-                                        <h4>{headline}</h4>
-                                        <p>{summary}</p>
-                                    </li>
-                                )
-                            })
-                        }
-                    </ul>
-                </div>
-            )
+        headlines_summary.forEach((summary, index) => {
+            newsArray[index].summary = summary
+        })
+
+        image_link.forEach((image, index) => {
+            newsArray[index].image = image
+        })
+
+        return {
+            newsArray,
+            loading: false,
+            error: null
         }
-        return (
-            <Loading />
-        )
-        
     }
+    else if(action.type === 'error') {
+        return {
+            ...state,
+            error: action.error.message,
+            loading: true
+        }
+    }
+    else {
+        throw new Error("Action provided isn't supported.")
+    }
+}
+
+function Headlines() {
+    const [state, dispatch] = React.useReducer(
+        headlineReducer,
+        {
+            newsArray: [],
+            loading: true,
+            error: null,
+        }
+    )
+
+    React.useEffect(() => {
+        getHeadlines()
+            .then(res => res.json())
+            .then(res => dispatch({type: 'success', res}))
+            .catch(error => dispatch({type: 'error', error}))
+    }, [])
+
+    const { newsArray, loading } = state
+
+    if(!loading){
+        return (
+            <div>
+                <ul className="news-list">
+                    {
+                        newsArray.map(({headline, summary, image}) => {
+                            return (
+                                <li className="news-card">
+                                    <img src={`${image}`} alt="News" />
+                                    <h4>{headline}</h4>
+                                    <p>{summary}</p>
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
+            </div>
+        )
+    }
+    return (
+        <Loading />
+    )      
 }
 
 export default Headlines;
