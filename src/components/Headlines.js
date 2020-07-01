@@ -1,68 +1,28 @@
 import React from 'react';
 import { getHeadlines } from '../utils/api';
 import Loading from './Loading';
-
-function headlineReducer(state, action) {
-    if(action.type === 'success') {
-        const { headlines, headlines_summary, image_link } = action.res
-
-        const newsArray = []
-
-        headlines.forEach((head, index) => {
-            newsArray[index] = {headline: head}
-        })
-
-        headlines_summary.forEach((summary, index) => {
-            newsArray[index].summary = summary
-        })
-
-        image_link.forEach((image, index) => {
-            newsArray[index].image = image
-        })
-
-        return {
-            newsArray,
-            loading: false,
-            error: null
-        }
-    }
-    else if(action.type === 'error') {
-        return {
-            ...state,
-            error: action.error.message,
-            loading: true
-        }
-    }
-    else {
-        throw new Error("Action provided isn't supported.")
-    }
-}
+import { useSelector, useDispatch } from 'react-redux';
+import { headlineListSuccess } from '../actions';
 
 function Headlines() {
-    const [state, dispatch] = React.useReducer(
-        headlineReducer,
-        {
-            newsArray: [],
-            loading: true,
-            error: null,
-        }
-    )
+    const headlinesList = useSelector(state => state.headlinesList)
+    const dispatch = useDispatch()
 
     React.useEffect(() => {
-        getHeadlines()
-            .then(res => res.json())
-            .then(res => dispatch({type: 'success', res}))
-            .catch(error => dispatch({type: 'error', error}))
-    }, [])
+        if(headlinesList === null){
+            getHeadlines()
+                .then(res => res.json())
+                .then(res => dispatch(headlineListSuccess(res)))
+                .catch(error => console.log(error))
+        }
+    }, [dispatch, headlinesList])
 
-    const { newsArray, loading } = state
-
-    if(!loading){
+    if(headlinesList !== null){
         return (
             <div>
                 <ul className="news-list">
                     {
-                        newsArray.map(({headline, summary, image}) => {
+                        headlinesList.map(({headline, summary, image}) => {
                             return (
                                 <li className="news-card">
                                     <img src={`${image}`} alt="News" />

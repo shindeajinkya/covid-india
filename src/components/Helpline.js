@@ -3,57 +3,29 @@ import { getHelplineNumbers } from '../utils/api';
 import { MdCall } from 'react-icons/md';
 import Loading from './Loading';
 import ThemeContext from '../contexts/theme';
-
-function helplineReducer(state, action) {
-    if(action.type === 'success') {
-        const { contact_details, ...data } = action.res
-
-        return {
-            ...state,
-            numberDetails: contact_details,
-            data,
-            error: null,
-            loading: false
-        }
-    }
-    else if(action.type === 'error') {
-        return {
-            ...state,
-            error: action.error.message
-        }
-    }
-    else {
-        throw new Error("Provides action isn't supported.")
-    }
-}
+import { useSelector, useDispatch } from 'react-redux';
+import { helpineInfoSuccess } from '../actions';
 
 function Helpline() {
     const [search, setSearch] = React.useState('')
-    const [state, dispatch] = React.useReducer(
-        helplineReducer,
-        {
-            numberDetails: [],
-            error: null,
-            data: null,
-            loading: true,
-        }
-    )
     const theme = React.useContext(ThemeContext)
+    const helplineInfo = useSelector(state => state.helplineInfo)
+    const dispatch = useDispatch()
 
     React.useEffect(() => {
         getHelplineNumbers()
             .then((data) => data.json())
-            .then((res) => dispatch({type: 'success', res}))
-            .catch((error) => dispatch({type: 'error', error}))
-    }, [])
+            .then((res) => dispatch(helpineInfoSuccess(res)))
+            .catch((error) => console.log(error))
+    }, [dispatch])
 
-    const { numberDetails, data, loading } = state
-
-    const filteredStates = numberDetails.filter((stateDetails) => {
-        return stateDetails.state_or_UT.toLowerCase().includes(search.toLowerCase())
-    })
     
-    if(!loading){
+    if(helplineInfo !== null){
+        const { numberDetails, data } = helplineInfo
+    
+        const filteredStates = numberDetails.filter((stateDetails) => {
+            return stateDetails.state_or_UT.toLowerCase().includes(search.toLowerCase())
+        })
 
         return (
             <div>
@@ -87,9 +59,7 @@ function Helpline() {
             </div>
         )
     }
-    else{
-        return <Loading />
-    }
+    return <Loading />
 }
 
 export default Helpline
